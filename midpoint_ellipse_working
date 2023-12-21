@@ -1,0 +1,84 @@
+#vismaya A M
+# Roll no:90
+#midpoint ellipse drawing algorithm
+
+from OpenGL.GL import *
+from OpenGL.GLUT import *
+from OpenGL.GLU import *
+
+import sys
+rx=float(input('enter the radius along x axis'))
+ry=float(input('enter the radius along y a'))
+x0=float(input('enter the x coordinate of center'))
+y0=float(input('enter the y coordinate of center'))
+
+
+def init():
+	glClearColor(0, 0, 0, 1)
+	gluOrtho2D(0, 800, 0, 600)
+
+def plot_pixel(x,y):
+	glBegin(GL_POINTS)
+	glVertex2f(x+x0,y+y0)
+	glEnd()
+
+def midpointEllipse():
+	x,y=0.0,ry
+	p10=(ry*ry)+(rx*rx*.25)-(rx*rx*ry)
+	plot_pixel(x,y)
+	plot_pixel(x,-y)
+	plot_pixel(-x,-y)
+	plot_pixel(-x,y)
+	while (2*ry*ry*x)<(2*rx*rx*y):
+		x+=1.0
+		if p10<0:
+			p10+=(2*ry*ry*x)+(ry*ry)
+		else:
+			y=y-1.0
+			p10+=(2*ry*ry*x)+(ry*ry)-(2*rx*rx*y)
+		plot_pixel(x,y)
+		plot_pixel(x,-y)
+		plot_pixel(-x,-y)
+		plot_pixel(-x,y)
+	while y>0:
+		y=y-1
+		if p10>0:
+			p10=p10-(2*rx*rx*y)+(rx*rx)+1
+		else:
+			x+=1
+			p10=p10-(2*rx*rx*y)+(rx*rx)+(2*ry*ry*x)
+		plot_pixel(x,y)
+		plot_pixel(x,-y)
+		plot_pixel(-x,-y)
+		plot_pixel(-x,y)
+
+def draw():
+	glClear(GL_COLOR_BUFFER_BIT)
+	glColor3f(255,0,0)
+	glPointSize(2.0)
+	midpointEllipse()
+	glutSwapBuffers()
+
+def main():
+	glutInit(sys.argv)
+	glutInitDisplayMode(GLUT_SINGLE|GLUT_RGBA)
+	glutInitWindowSize(800,600)
+	glutInitWindowPosition(600, 0)
+	glutCreateWindow("Midopoint Ellipse Drawing")
+	glutDisplayFunc(draw)
+	init()
+	glutMainLoop()
+
+
+
+
+main()
+
+'''
+output
+enter the radius along x axis 100
+enter the radius along y a 50
+enter the x coordinate of center 150
+enter the y coordinate of center 150
+
+'''
